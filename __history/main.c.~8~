@@ -47,8 +47,10 @@ void timer1_config() {
 
 // --- Função para exibir valor nos dois displays ---
 void exibir_display(int8 valor) {
-   int8 dezena = valor / 10;
-   int8 unidade = valor % 10;
+   int8 dezena = 1;
+   int8 unidade = 1;
+   // int8 unidade = valor / 10;
+   // int8 unidade = valor % 10;
 
    // Exibe nos displays
    output_c(tabela_7seg[dezena]);   // Porta C â†’ dezenas
@@ -75,9 +77,13 @@ void main() {
    output_c(0);
    output_d(0);
 
-   timer1_config();
+   //timer1_config();
+   for(int i = 0 ; i < 10 ; i++){
+      output_d(tabela_7seg[i]);
+      delay_ms(1000);
+   }
 
-   while(TRUE) {
+   /*while(TRUE) {
       exibir_display(segundos);
 
       // START/STOP
@@ -100,5 +106,5 @@ void main() {
       }
 
       delay_ms(50);  // Delay curto para estabilidade
-   }
+   }*/
 }

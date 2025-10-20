@@ -47,8 +47,10 @@ void timer1_config() {
 
 // --- Função para exibir valor nos dois displays ---
 void exibir_display(int8 valor) {
-   int8 dezena = valor / 10;
-   int8 unidade = valor % 10;
+   int8 dezena = 1;
+   int8 unidade = 1;
+   // int8 unidade = valor / 10;
+   // int8 unidade = valor % 10;
 
    // Exibe nos displays
    output_c(tabela_7seg[dezena]);   // Porta C â†’ dezenas

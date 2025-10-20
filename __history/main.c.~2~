@@ -26,7 +26,7 @@ const int8 tabela_7seg[10] = {
    0b01101111  // 9
 };
 
-// --- InterrupÁ„o do Timer1 (1 segundo) ---
+// --- Interrup√ß√£o do Timer1 (1 segundo) ---
 #int_TIMER1
 void timer1_isr() {
    if (rodando) {
@@ -37,7 +37,7 @@ void timer1_isr() {
    set_timer1(3036);  // Recarrega o Timer1
 }
 
-// --- ConfiguraÁ„o do Timer1 ---
+// --- Configura√ß√£o do Timer1 ---
 void timer1_config() {
    setup_timer_1(T1_INTERNAL | T1_DIV_BY_8);  // Clock interno, prescaler 1:8
    set_timer1(3036);  // 65536 - (4MHz/4/8/1Hz) = 3036
@@ -45,19 +45,20 @@ void timer1_config() {
    enable_interrupts(GLOBAL);
 }
 
-// --- FunÁ„o para exibir valor nos dois displays ---
+// --- Fun√ß√£o para exibir valor nos dois displays ---
 void exibir_display(int8 valor) {
    int8 dezena = valor / 10;
-   int8 unidade = valor % 10;
+   int8 unidade = valor / 10;
+//    int8 unidade = valor % 10;
 
    // Exibe nos displays
    output_c(tabela_7seg[dezena]);   // Porta C ‚Üí dezenas
    output_d(tabela_7seg[unidade]);  // Porta D ‚Üí unidades
 }
 
-// --- Leitura dos botıes (com debounce simples) ---
+// --- Leitura dos bot√µes (com debounce simples) ---
 int1 botao_pressionado(int pin) {
-   if (!input(pin)) {     // Bot„o ativo em nÌvel baixo
+   if (!input(pin)) {     // Bot√£o ativo em n√≠vel baixo
       delay_ms(20);       // Debounce
       if (!input(pin))
          return 1;
@@ -68,9 +69,9 @@ int1 botao_pressionado(int pin) {
 // --- Programa principal ---
 void main() {
    // Configura portas
-   set_tris_b(0b00000111);  // RB0, RB1, RB2 = entradas (botıes)
-   set_tris_c(0x00);        // PORTC = saÌda (display dezenas)
-   set_tris_d(0x00);        // PORTD = saÌda (display unidades)
+   set_tris_b(0b00000111);  // RB0, RB1, RB2 = entradas (bot√µes)
+   set_tris_c(0x00);        // PORTC = sa√≠da (display dezenas)
+   set_tris_d(0x00);        // PORTD = sa√≠da (display unidades)
 
    output_c(0);
    output_d(0);
