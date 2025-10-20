@@ -2,16 +2,16 @@
 #fuses NOWDT, HS, NOPROTECT, NOLVP
 #use delay(clock=4000000)  // Clock de 4 MHz
 
-// --- Mapeamento dos botıes ---
+// --- Mapeamento dos bot√µes ---
 #define BTN_START_STOP  PIN_B0
 #define BTN_RESUME      PIN_B1
 #define BTN_RESET       PIN_B2
 
-// --- Vari·veis globais ---
+// --- Vari√°veis globais ---
 int8 segundos = 0;
 int1 rodando = 0;   // Flag: 1 = contando, 0 = pausado
 
-// --- Tabela para display de 7 segmentos (c·todo comum) ---
+// --- Tabela para display de 7 segmentos (c√°todo comum) ---
 // Ordem dos bits: gfedcba
 const int8 tabela_7seg[10] = {
    0b00111111, // 0
@@ -51,8 +51,8 @@ void exibir_display(int8 valor) {
    int8 unidade = valor % 10;
 
    // Exibe nos displays
-   output_c(tabela_7seg[dezena]);   // Porta C dezenas
-   output_d(tabela_7seg[unidade]);  // Porta D unidades
+   output_c(tabela_7seg[dezena]);   // Porta C ‚Üí dezenas
+   output_d(tabela_7seg[unidade]);  // Porta D ‚Üí unidades
 }
 
 // --- Leitura dos botıes (com debounce simples) ---
@@ -95,7 +95,7 @@ void main() {
       // RESET
       if (botao_pressionado(BTN_RESET)) {
          segundos = 0;
-         rodando = 0;            // Pausa apÛs reset
+         rodando = 0;            // Pausa ap√≥s reset
          while(!input(BTN_RESET));
       }
 
