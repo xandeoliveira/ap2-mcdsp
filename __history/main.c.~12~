@@ -10,7 +10,7 @@
 // --- Variáveis globais ---
 int8 segundos = 0;
 int1 rodando = 0;     // Flag: 1 = contando, 0 = pausado
-int8 post_scaler = 0; // Contador para 1 segundo
+int8 post_scaler = 0; // *NOVO* Contador para 1 segundo
 
 // --- Tabela para display de 7 segmentos (cátodo comum) ---
 const int8 tabela_7seg[10] = {
@@ -43,7 +43,7 @@ void timer1_isr() {
         }
     }
     
-    // Recarrega o Timer1 para +100ms
+    // *CORRIGIDO* Recarrega o Timer1 para +100ms
     set_timer1(53036);  
 }
 
@@ -51,7 +51,7 @@ void timer1_isr() {
 void timer1_config() {
     setup_timer_1(T1_INTERNAL | T1_DIV_BY_8);  // Clock interno, prescaler 1:8
     
-    // Valor para 100ms (65536 - 12500)
+    // *CORRIGIDO* Valor para 100ms (65536 - 12500)
     set_timer1(53036);  
     enable_interrupts(INT_TIMER1);
     enable_interrupts(GLOBAL);
@@ -62,7 +62,9 @@ void exibir_display(int8 valor) {
     int8 dezena = valor / 10;
     int8 unidade = valor % 10;
 
-    // Exibe nos displays
+    // Exibe nos displays (Se os números parecerem errados, 
+    // seu PORTC e PORTD podem estar trocados.
+    // Tente inverter as duas linhas abaixo)
     output_c(tabela_7seg[dezena]);   // Porta C -> dezenas
     output_d(tabela_7seg[unidade]); // Porta D -> unidades
 }
@@ -113,7 +115,8 @@ void main() {
             while(!input(BTN_RESET));
         }
 
-        // Delay pequeno ajuda a estabilizar a leitura dos botões.
+        // Não precisa de um delay grande aqui, mas 
+        // um pequeno ajuda a estabilizar a leitura dos botões.
         delay_ms(20);
     }
 }

@@ -16,21 +16,22 @@
 026     @INTERRUPT_AREA
 027     segundos
 028.0   rodando
-029     @TRIS_C
-02A     exibir_display.valor
-02A     botao_pressionado.pin
-02B     @delay_ms1.P1
-02B     exibir_display.dezena
-02B     @READBITA.P1
-02B     @WRITEBITA.P2
-02C-02D @READBITA.P1
-02C     @WRITEBITA.P2
-02C     exibir_display.unidade
-02D     @DIV88.P1
-02D-02E @WRITEBITA.P2
-02D     exibir_display.@SCRATCH1
+029     post_scaler
+02A     @TRIS_C
+02B     exibir_display.valor
+02B     botao_pressionado.pin
+02C     exibir_display.dezena
+02C     @READBITA.P1
+02C     @delay_ms1.P2
+02C     @WRITEBITA.P3
+02D-02E @READBITA.P1
+02D     exibir_display.unidade
+02D     @WRITEBITA.P1
 02E     @DIV88.P1
-02F     @DIV88.@SCRATCH1
+02E-02F @WRITEBITA.P2
+02E     exibir_display.@SCRATCH1
+02F     @DIV88.P1
+030     @DIV88.@SCRATCH1
 077     @SCRATCH
 078     @SCRATCH
 078     _RETURN_
@@ -77,25 +78,25 @@ ROM Allocation:
 000031  tabela_7seg.call
 000035  tabela_7seg.data
 00003F  timer1_isr
-00004F  timer1_config
-00005E  @DIV88
-000073  exibir_display
-000096  @WRITEBITA
-0000B6  @READBITA
-0000CD  @delay_ms1
-0000E2  botao_pressionado
-000109  MAIN
-000109  @cinit1
-000114  @cinit2
+000055  timer1_config
+000064  @DIV88
+000079  exibir_display
+00009C  @WRITEBITA
+0000BC  @READBITA
+0000D3  @delay_ms1
+0000E8  botao_pressionado
+00010F  MAIN
+00010F  @cinit1
+00011B  @cinit2
 
 Project Directory:
-    C:\Users\olive\Desenvolvimento\ap2-mcdsp\
+    C:\Desenvolvimento\ap2-mcdsp\
 
 Project Files:
-    main.c                                                  [20-out-25 13:12  CRC=46CEB394]
-    ..\..\..\..\Program Files (x86)\PICC\Devices\16F877A.h  [21-jun-13 16:04  CRC=4E65664C]
+    main.c                                                  [20-out-25 22:00  CRC=F44EFAFF]
+    ..\..\Program Files (x86)\PICC\Devices\16F877A.h        [21-jun-13 16:04  CRC=4E65664C]
 
-Source signature=E399802C
+Source signature=9119C797
 
 Units:
     main (main)

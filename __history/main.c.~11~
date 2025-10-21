@@ -1,0 +1,104 @@
+#include <16F877A.h>
+#fuses NOWDT, HS, NOPROTECT, NOLVP
+#use delay(clock=4000000)  // Clock de 4 MHz
+
+// --- Mapeamento dos botões ---
+#define BTN_START_STOP  PIN_B0
+#define BTN_RESUME      PIN_B1
+#define BTN_RESET       PIN_B2
+
+// --- Variáveis globais ---
+int8 segundos = 0;
+int1 rodando = 0;   // Flag: 1 = contando, 0 = pausado
+
+// --- Tabela para display de 7 segmentos (cátodo comum) ---
+// Ordem dos bits: gfedcba
+const int8 tabela_7seg[10] = {
+   0b00111111, // 0
+   0b00000110, // 1
+   0b01011011, // 2
+   0b01001111, // 3
+   0b01100110, // 4
+   0b01101101, // 5
+   0b01111101, // 6
+   0b00000111, // 7
+   0b01111111, // 8
+   0b01101111  // 9
+};
+
+// --- Interrupção do Timer1 (1 segundo) ---
+#int_TIMER1
+void timer1_isr() {
+   if (rodando) {
+      segundos++;
+      if (segundos > 99)
+         segundos = 0;
+   }
+   set_timer1(3036);  // Recarrega o Timer1
+}
+
+// --- Configuração do Timer1 ---
+void timer1_config() {
+   setup_timer_1(T1_INTERNAL | T1_DIV_BY_8);  // Clock interno, prescaler 1:8
+   set_timer1(3036);  // 65536 - (4MHz/4/8/1Hz) = 3036
+   enable_interrupts(INT_TIMER1);
+   enable_interrupts(GLOBAL);
+}
+
+// --- Função para exibir valor nos dois displays ---
+void exibir_display(int8 valor) {
+   int8 dezena = valor / 10;
+   int8 unidade = valor % 10;
+
+   // Exibe nos displays
+   output_c(tabela_7seg[dezena]);   // Porta C dezenas
+   output_d(tabela_7seg[unidade]);  // Porta D unidades
+}
+
+// --- Leitura dos botões (com debounce simples) ---
+int1 botao_pressionado(int pin) {
+   if (!input(pin)) {     // Botão ativo em nível baixo
+      delay_ms(20);       // Debounce
+      if (!input(pin))
+         return 1;
+   }
+   return 0;
+}
+
+// --- Programa principal ---
+void main() {
+   // Configura portas
+   set_tris_b(0b00000111);  // RB0, RB1, RB2 = entradas (botões)
+   set_tris_c(0x00);        // PORTC = saída (display dezenas)
+   set_tris_d(0x00);        // PORTD = saída (display unidades)
+
+   output_c(0);
+   output_d(0);
+
+   timer1_config();
+
+   while(TRUE) {
+      exibir_display(segundos);
+
+      // START/STOP
+      if (botao_pressionado(BTN_START_STOP)) {
+         rodando = !rodando;     // Alterna entre rodando e pausado
+         while(!input(BTN_START_STOP));  // Espera soltar
+      }
+
+      // RESUME
+      if (botao_pressionado(BTN_RESUME)) {
+         rodando = 1;            // Continua a contagem
+         while(!input(BTN_RESUME));
+      }
+
+      // RESET
+      if (botao_pressionado(BTN_RESET)) {
+         segundos = 0;
+         rodando = 0;            // Pausa após reset
+         while(!input(BTN_RESET));
+      }
+
+      delay_ms(50);  // Delay curto para estabilidade
+   }
+}
